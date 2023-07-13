@@ -1,0 +1,21 @@
+<template>
+
+    <div class="slds-card my-chart-container">
+        <div class="slds-card__body my-chart-body">
+            <div>
+            <h1 class="title">Dow Jones</h1>
+                <label for="chart-value"> Select Time Range</label>
+                <select id="chart-value" onchange={handleChange}>
+                    <option value ='5'>1 Week</option>
+                    <option value ='21'>1 Month</option>
+                    <option value ='63'>3 Month</option>
+                    <option value ='252'>1 Year</option>
+                    <option value ='756'>3 Year</option>
+                </select>
+        
+                
+            <canvas class="my-chart-canvas"></canvas>
+        </div>
+        </div>
+    </div>
+</template>

@@ -1,0 +1,66 @@
+.my-chart-container {
+    width: 100%;
+    height: 900px;
+    overflow: auto;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.my-chart-body {
+    padding: 40px;
+}
+
+.my-chart-canvas {
+    width: 100%;
+    height: 100%;
+}
+
+
+label {
+    font-size: 24px;
+    color: #555;
+    margin-bottom: 20px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+select {
+    padding: 16px;
+    font-size: 20px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+    background-color: #f1f1f1;
+    color: #333;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s ease;
+}
+
+select:hover {
+    border-color: #999;
+}
+
+select:focus {
+    border-color: #555;
+    background-color: #fff;
+}
+
+canvas {
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+canvas:hover {
+    border-color: #999;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+canvas:focus {
+    border-color: #555;
+    outline: none;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}

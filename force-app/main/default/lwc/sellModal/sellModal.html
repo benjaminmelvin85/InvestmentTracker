@@ -1,0 +1,32 @@
+<template>
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open slds-modal_large">
+        <div class="slds-modal__container">
+            <header class="slds-modal__header">
+                <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Sell Investment</h2>
+            </header>
+            <div class="slds-modal__content slds-p-around_medium">
+                
+                <p class="slds-text-body_small">Investment Ticker: {stockSymbol}</p>
+                <p class="slds-text-body_small">Current Share Price: {currentSharePrice}</p>
+                <p class="slds-text-body_small">Purchase Share Price: {purchaseSharePrice}</p>
+                <p class="slds-text-body_small">Current Shares: {quantity}</p>
+
+               
+                <div class="slds-form slds-form_stacked">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="quantityToSell">Quantity to Sell</label>
+                        <div class="slds-form-element__control">
+                            <input type="number" id="quantityToSell" class="slds-input" value={quantityToSell} oninput={handleQuantityChange} />
+                        </div>
+                    </div>
+                   
+                </div>
+            </div>
+            <footer class="slds-modal__footer">
+                <button class="slds-button slds-button_neutral" onclick={handleCancel}>Cancels</button>
+                <button class="slds-button slds-button_brand" onclick={handleSell}>Sell</button>
+            </footer>
+        </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+</template>

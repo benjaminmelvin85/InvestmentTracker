@@ -1,0 +1,42 @@
+<template>
+    <lightning-card title="My Stock Transactions" class="my-card">
+    <div class="slds-m-around_medium">
+        <lightning-input
+            label="Stock Symbol"
+            type="text"
+            value={stockSymbol}
+            onchange={handleSymbolChange}
+            class="my-input"
+        ></lightning-input>
+        <lightning-button
+            label="Get Stock Information"
+            onclick={handleSubmit}
+            class="my-button"
+        ></lightning-button>
+    
+        </div>
+        <template if:true={stockInfo}>
+            <div class="slds-m-around_medium">
+                <p><b>Symbol:</b> {stockInfo.symbol}</p>
+                <p><b>Price:</b> {stockInfo.price}</p>
+                <p><b>Volume:</b> {stockInfo.volume}</p>
+            </div>
+            <template if:true={showBuyButton}>
+                <div class="slds-m-around_medium">
+                    <lightning-record-edit-form object-api-name="Investment__c">
+                        <lightning-messages></lightning-messages>
+                        <lightning-input-field field-name="BUY_SELL__c" value="BUY" hidden></lightning-input-field>
+                        <lightning-input-field field-name="Quantity__c" type="number" value={quantity} onchange={handleQuantityChange}></lightning-input-field>
+                        <lightning-input-field field-name="Portfolio__c" value={portfolioId} onchange={handlePortfolioChange}></lightning-input-field>
+                        <lightning-input-field field-name="Purchase_Share_Price__c" value={stockInfo.price} disabled></lightning-input-field>
+                        <lightning-input-field field-name="Security__c" value={securityId} onchange={handleSecurityChange}></lightning-input-field>
+                        <lightning-input-field field-name="Symbol__c" value={stockSymbol} disabled></lightning-input-field>
+                        <lightning-button label="Buy" variant="brand" onclick={handleBuyButtonClick}></lightning-button>
+                    </lightning-record-edit-form>
+            
+                    <c-chart-component stock-symbol={stockSymbol}></c-chart-component>
+                </div>
+            </template>
+        </template>
+    </lightning-card>
+</template>

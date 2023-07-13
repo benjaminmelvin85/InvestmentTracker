@@ -1,0 +1,90 @@
+<apex:page controller="PortfolioSorterController" lightningStylesheets="true">
+    <apex:form >
+        <apex:pageBlock title="Check For Existing Clients" id="CheckClient">
+            <apex:pageMessages/>
+            <apex:pageBlockSection>
+                <apex:inputText value="{!ClientName}" label="Client Name"/>
+                <apex:commandButton value="Check" action="{!checkClientExists}" reRender="CheckClient,Portfolio_list" />
+            </apex:pageBlockSection>
+            <apex:outputPanel rendered = "{!NOT(ISBLANK(clientExistsMessage))}">
+            <p>{!clientExistsMessage}</p>
+        </apex:outputPanel>
+        </apex:pageBlock>
+      <apex:pageBlock title="My Clients" id="Portfolio_list">
+            <apex:actionRegion >
+                <apex:pageBlockTable value="{!portfolio}" var="port">
+                    <apex:column value="{!port.Client__c}">
+                        <apex:facet name="header">
+                            <apex:commandLink action="{!sortByClient}" reRender="Portfolio_list">
+                                Client
+                                <apex:outputPanel rendered="{!sortField == 'Client__c'}">
+                                    <apex:outputText value="{!IF(sortDirection == 'ASC', '▲', '▼')}"/>
+                                </apex:outputPanel>
+                            </apex:commandLink>
+                        </apex:facet>
+                    </apex:column>
+                    <apex:column value="{!port.Client__r.Client_Email__c}">
+                        <apex:facet name="header">
+                            <apex:commandLink action="{!sortByClientEmail}" reRender="Portfolio_list">
+                                Client Email
+                                <apex:outputPanel  rendered="{!sortField == 'Client__r.Client_Email__c'}">
+                                    <apex:outputText value="{!IF(sortDirection == 'ASC', '▲', '▼')}"/>
+                                </apex:outputPanel>
+                            </apex:commandLink>
+                        </apex:facet>
+                    </apex:column>
+                    <apex:column value="{!port.Client__r.HomePhone}">
+                        <apex:facet name="header">
+                            <apex:commandLink action="{!sortByHomePhone}" reRender="Portfolio_list">
+                                Phone Number
+                                <apex:outputPanel rendered="{!sortField == 'Client__r.Client_Email__c'}">
+                                    <apex:outputText value="{!IF(sortDirection == 'ASC', '▲', '▼')}"/>
+                                </apex:outputPanel>
+                            </apex:commandLink>
+                        </apex:facet>
+                    </apex:column>
+                    <apex:column value="{!port.Cash_Available__c}">
+                        <apex:facet name="header">
+                            <apex:commandLink action="{!sortByCashAvailable}" reRender="Portfolio_list">
+                                Cash Available
+                                <apex:outputPanel rendered="{!sortField == 'Cash_Available__c'}">
+                                    <apex:outputText value="{!IF(sortDirection == 'ASC', '▲', '▼')}"/>
+                                </apex:outputPanel>
+                            </apex:commandLink>
+                        </apex:facet>
+                    </apex:column>
+                    <apex:column value="{!port.Total_Gain_Loss__c}">
+                        <apex:facet name="header">
+                            <apex:commandLink action="{!sortByTotalGainLoss}" reRender="Portfolio_list">
+                                Total Gain Loss
+                                <apex:outputPanel rendered="{!sortField == 'Total_Gain_Loss__c'}">
+                                    <apex:outputText value="{!IF(sortDirection == 'ASC', '▲', '▼')}"/>
+                                </apex:outputPanel>
+                            </apex:commandLink>
+                        </apex:facet>
+                    </apex:column>
+                    <apex:column value="{!port.Total_Purchase_Cost__c}">
+                        <apex:facet name="header">
+                            <apex:commandLink action="{!sortByTotalPurchaseCost}" reRender="Portfolio_list">
+                                Total Invested Amount
+                                <apex:outputPanel rendered="{!sortField == 'Total_Purchase_Cost__c'}">
+                                    <apex:outputText value="{!IF(sortDirection == 'ASC', '▲', '▼')}"/>
+                                </apex:outputPanel>
+                            </apex:commandLink>
+                        </apex:facet>
+                    </apex:column>
+                    <apex:column value="{!port.Deposit__c}">
+                        <apex:facet name="header">
+                            <apex:commandLink action="{!sortByDeposit}" reRender="Portfolio_list">
+                                Initial Deposit
+                                <apex:outputPanel rendered="{!sortField == 'Deposit__c'}">
+                                    <apex:outputText value="{!IF(sortDirection == 'ASC', '▲', '▼')}"/>
+                                </apex:outputPanel>
+                            </apex:commandLink>
+                        </apex:facet>
+                    </apex:column>
+                </apex:pageBlockTable>
+            </apex:actionRegion>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

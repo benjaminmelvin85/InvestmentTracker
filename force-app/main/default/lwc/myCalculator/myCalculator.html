@@ -1,0 +1,38 @@
+<template>
+    <div class="slds-grid slds-wrap slds-grid_vertical">
+    <div class="slds-form-element">
+    <label class="slds-form-element__label" id="results" for="result">Result</label>
+    <div class="slds-form-element__control">
+    <input type="text" id="result" class="slds-input white-background" value={result} readonly />
+    </div>
+    </div>
+    <br/>
+    <div class="slds-grid slds-wrap slds-grid_align-center">
+    <button class="slds-button slds-button_brand slds-m-bottom_small" value="7" onclick={handleClick}>7</button>
+    <button class="slds-button slds-button_brand slds-m-bottom_small" value="4" onclick={handleClick}>8</button>
+    <button class="slds-button slds-button_brand slds-m-bottom_small" value="1" onclick={handleClick}>9</button>
+    <button class="slds-button slds-button_brand slds-m-bottom_small" value="+" onclick={handleClick}>+</button>
+    </div>
+    <div class="slds-grid slds-wrap slds-grid_align-center">
+    <button class="slds-button slds-button_brand slds-m-bottom_small" value="8" onclick={handleClick}>4</button>
+    <button class="slds-button slds-button_brand slds-m-bottom_small" value="5" onclick={handleClick}>5</button>
+    <button class="slds-button slds-button_brand slds-m-bottom_small" value="2" onclick={handleClick}>6</button>
+    <button class="slds-button slds-button_brand slds-m-bottom_small" value="-" onclick={handleClick}>-</button>
+    </div>
+    <div class="slds-grid slds-wrap slds-grid_align-center">
+    <button class="slds-button slds-button_brand slds-m-bottom_small" value="1" onclick={handleClick}>1</button>
+    <button class="slds-button slds-button_brand slds-m-bottom_small" value="2" onclick={handleClick}>2</button>
+    <button class="slds-button slds-button_brand slds-m-bottom_small" value="3" onclick={handleClick}>3</button>
+    <button class="slds-button slds-button_brand slds-m-bottom_small" value="*" onclick={handleClick}>*</button>
+    </div>
+    <div class="slds-grid slds-wrap slds-grid_align-center">
+    <button class="slds-button slds-button_brand slds-m-bottom_small" value="0" onclick={handleClick}>0</button>
+    <button class="slds-button slds-button_brand slds-m-bottom_small" value="." onclick={handleClick}>.</button>
+    <button class="slds-button slds-button_brand slds-m-bottom_small" value="/" onclick={handleClick}>/</button>
+    <button class="slds-button slds-button_brand slds-m-bottom_small" onclick={clear}>C</button>
+    </div>
+    <div class="slds-grid slds-wrap slds-grid_align-center">
+    <button class="slds-button slds-button_brand slds-m-bottom_small" onclick={calculate}>=</button>
+    </div>
+    </div>
+    </template>

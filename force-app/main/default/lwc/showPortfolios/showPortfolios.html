@@ -1,0 +1,83 @@
+<template>
+     <lightning-card title="Select Portfolio" class="my-card">
+        <div class="slds-m-around_medium">
+            <lightning-combobox
+                label="Select Portfolio"
+                options={portfolioOptions}
+                value={selectedPortfolio}
+                onchange={handlePortfolioChange}
+                class="my-combobox"
+            ></lightning-combobox>
+        </div>
+    </lightning-card>
+   <template if:true={selectedPortfolio}>
+    <lightning-card title="Associated Investments">
+        <div class="slds-m-around_medium">
+            <div class="slds-grid slds-wrap">
+                <div class="slds-col slds-size_1-of-4 slds-text-align_center">
+                    <p class="slds-text-title"><strong>Ticker</strong></p>
+                </div>
+                <div class="slds-col slds-size_1-of-4 slds-text-align_center">
+                    <p class="slds-text-title"><strong>Shares</strong></p>
+                </div>
+                <div class="slds-col slds-size_1-of-4 slds-text-align_right">
+                    <p class="slds-text-title"><strong>Purchase Cost</strong></p>
+                </div>
+                <div class="slds-col slds-size_1-of-4 slds-text-align_center">
+                    <p class="slds-text-title"><strong>Sell</strong></p>
+                </div>
+            </div>
+            <template for:each={investments} for:item="investment">
+                <div key={investment.Id} data-id={investment.Id} class="slds-m-bottom_small">
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-col slds-size_1-of-4 slds-text-align_center">
+                            <p class="slds-truncate" title={investment.Symbol__c}>
+                                <a onclick={handleInvestmentClick} data-id={investment.Id}>{investment.Symbol__c}</a>
+                            </p>
+                        </div>
+                        <div class="slds-col slds-size_1-of-4 slds-text-align_center">
+                            <p class="slds-m-0">{investment.Shares_Remaining__c}</p>
+                        </div>
+                        <div class="slds-col slds-size_1-of-4 slds-text-align_right">
+                            <p class="slds-m-0"><lightning-formatted-number format-style='currency' value={investment.Total_Purchase_Cost__c}></lightning-formatted-number></p>
+                        </div>
+                        <div class="slds-col slds-size_1-of-4 slds-text-align_center">
+                            <lightning-button
+                                label="Sell"
+                                title="Sell"
+                                class="slds-m-left_x-small"
+                                onclick={handleSellClick}
+                                data-id={investment.Id}
+                                data-symbol={investment.Symbol__c}
+                                data-purchase={investment.Purchase_Share_Price__c}
+                                data-quantity={investment.Shares_Remaining__c}
+                                data-final={investment.Final__c}
+                                data-initial={investment.InitialVal__c}
+                                data-total={investment.Total_Purchase_Cost__c}
+                            ></lightning-button>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>
+
+
+    <template if:true={showModal}>
+        <div class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <c-sell-modal
+                    investment-id={investmentIdForModal}
+                    stock-symbol={stockSymbolForModal}
+                    purchase-share-price={purchaseSharePriceForModal}
+                    quantity={quantityForModal}
+                    final={finalForModal}
+                    initial={initialForModal}
+                    total={totalPurchaseForModal}
+                ></c-sell-modal>
+            </div>
+        </div>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>

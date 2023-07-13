@@ -1,0 +1,22 @@
+<apex:page controller="CustomController" lightningStylesheets = "true">
+    <apex:form>
+        <apex:pageBlock>
+            <apex:pageBlockSection>
+                <apex:inputText value="{!parameter}" />
+                <apex:commandButton value="Search for Latest Stock News!" action="{!loadWebsite}" rerender="resultsPanel" />
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+    <apex:outputPanel id="resultsPanel">
+        <apex:pageBlock rendered="{!results != null}">
+            <apex:pageBlockTable value="{!results}" var="result">
+                <apex:column headerValue="Link to Story">
+                    <apex:outputLink value="{!result.url}" target="_blank">{!result.title}</apex:outputLink>
+                </apex:column>
+                <apex:column headerValue="Description">
+                    <apex:outputText value="{!result.description}" />
+                </apex:column>
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+    </apex:outputPanel>
+</apex:page>
