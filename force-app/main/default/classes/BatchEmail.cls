@@ -1,7 +1,7 @@
 public class BatchEmail implements Database.Batchable<sObject> {
     
     public Database.QueryLocator Start (Database.BatchableContext bc) {
-        // so confused
+        
         return Database.getQueryLocator('Select Id, Initial_Buy_Value__c, Transaction_Value__c, Portfolio__r.Client__r.Client_Email__c, Portfolio__r.Client__r.Name From Trading_History__c Where Initial_Buy_Value__c >20000 Or Transaction_Value__c > 20000');
     }
     public void execute (Database.BatchableContext bc, List<sObject> myList) {
