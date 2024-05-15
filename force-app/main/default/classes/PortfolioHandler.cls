@@ -1,6 +1,6 @@
 public with sharing class PortfolioHandler {
     
-
+//doh
     public static void populateAmount(List<Portfolio__c> portList) {
 
         for (Portfolio__c inv : portList) {
