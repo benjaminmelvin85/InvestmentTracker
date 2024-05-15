@@ -1,7 +1,7 @@
 public class MonthlyEmail implements Schedulable {
     public void execute(SchedulableContext sc) {
         List<Messaging.SingleEmailMessage> emailList = new List<Messaging.SingleEmailMessage>();
-        //dp
+        
         Date last30Days = Date.today().addDays(-30);
         
         List<Trading_History__c> myList = [SELECT Id, Initial_Buy_Value__c, Transaction_Value__c, Symbol__c, Quantity__c, Sum_of_Sold__c, Portfolio__r.Client__r.Client_Email__c, Portfolio__r.Client__r.Name 
