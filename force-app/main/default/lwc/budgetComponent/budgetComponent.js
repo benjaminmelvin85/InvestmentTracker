@@ -1,4 +1,4 @@
-import { LightningElement, wire, api, track } from 'lwc';
+import { LightningElement, wire, api } from 'lwc';
 import getBudgetData from '@salesforce/apex/BudgetController.getBudgetData';
 import USER_ID from '@salesforce/user/Id';
 import { refreshApex } from '@salesforce/apex';
@@ -14,23 +14,15 @@ export default class BudgetComponent extends LightningElement {
     wiredBudgetDataResult;
     showModal = false;
     modalType = '';
-
-    // Determine which object to use based on the modal type
-    get objectApiName() {
-        return this.modalType === 'IncomeSource' ? 'Income_Source__c' : 'Recurring_Expense__c';
-    }
+    modalTitle = '';
+    objectApiName = '';
 
     get isIncomeSource() {
         return this.modalType === 'IncomeSource';
     }
 
-    // To dynamically control visibility of additional fields
-    get isRecurringExpense() {
-        return this.modalType === 'RecurringExpense';
-    }
-
-    get modalTitle() {
-        return this.modalType === 'IncomeSource' ? 'Add Income Source' : 'Add Recurring Expense';
+    get cashFlowClass() {
+        return this.netMonthlyCashFlow >= 0 ? 'slds-text-color_success final-summary' : 'slds-text-color_error final-summary';
     }
 
     @wire(getBudgetData, { userId: USER_ID })
@@ -64,11 +56,15 @@ export default class BudgetComponent extends LightningElement {
 
     handleAddIncomeSource() {
         this.modalType = 'IncomeSource';
+        this.modalTitle = 'Add Income Source';
+        this.objectApiName = 'Income_Source__c';
         this.showModal = true;
     }
 
     handleAddRecurringExpense() {
         this.modalType = 'RecurringExpense';
+        this.modalTitle = 'Add Recurring Expense';
+        this.objectApiName = 'Recurring_Expense__c';
         this.showModal = true;
     }
 
@@ -76,14 +72,13 @@ export default class BudgetComponent extends LightningElement {
         this.showModal = false;
     }
 
-    handleSuccess() {
-        this.showToast('Success', `${this.modalType === 'IncomeSource' ? 'Income Source' : 'Recurring Expense'} created successfully`, 'success');
-        this.handleCloseModal();
+    handleRecordSuccess(event) {
+        this.showToast('Success', event.detail, 'success');
         this.refreshData();
     }
 
-    handleError(event) {
-        this.showToast('Error', `Error creating ${this.modalType === 'IncomeSource' ? 'Income Source' : 'Recurring Expense'}: ${event.detail.message}`, 'error');
+    handleRecordError(event) {
+        this.showToast('Error', event.detail, 'error');
     }
 
     showToast(title, message, variant) {
