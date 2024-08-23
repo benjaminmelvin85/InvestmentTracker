@@ -1,0 +1,102 @@
+<template>
+    <lightning-card>
+        <div class="header-container">
+            <lightning-formatted-text value="Your Monthly Budget Summary" class="header-title"></lightning-formatted-text>
+        </div>
+
+        <div class="slds-p-around_medium content-container">
+            <div class="button-container">
+                <lightning-button label="Add Income Source" onclick={handleAddIncomeSource} class="slds-m-bottom_small"></lightning-button>
+                <lightning-button label="Add Recurring Expense" onclick={handleAddRecurringExpense} class="slds-m-bottom_small"></lightning-button>
+            </div>
+
+            <div class="summary-section">
+                <div class="summary-title">
+                    <lightning-icon icon-name="utility:money" alternative-text="Income Icon" size="small" class="section-icon"></lightning-icon>
+                    <lightning-formatted-text value="Income Summary"></lightning-formatted-text>
+                </div>
+                <div class="summary-item">
+                    <lightning-formatted-text value="Total Monthly Income:" class="summary-label"></lightning-formatted-text>
+                    <lightning-formatted-number value={totalMonthlyIncome} format-style="currency" currency-code="USD" class="summary-value"></lightning-formatted-number>
+                </div>
+            </div>
+
+            <div class="summary-section">
+                <div class="summary-title">
+                    <lightning-icon icon-name="utility:adjust_value" alternative-text="Expenses Icon" size="small" class="section-icon"></lightning-icon>
+                    <lightning-formatted-text value="Expenses Summary"></lightning-formatted-text>
+                </div>
+                <div class="summary-item">
+                    <lightning-formatted-text value="Total Fixed Expenses:" class="summary-label"></lightning-formatted-text>
+                    <lightning-formatted-number value={totalFixedExpenses} format-style="currency" currency-code="USD" class="summary-value"></lightning-formatted-number>
+                </div>
+                <div class="summary-item">
+                    <lightning-formatted-text value="Total Variable Expenses:" class="summary-label"></lightning-formatted-text>
+                    <lightning-formatted-number value={totalVariableExpenses} format-style="currency" currency-code="USD" class="summary-value"></lightning-formatted-number>
+                </div>
+                <div class="summary-item">
+                    <lightning-formatted-text value="Total One-Time Expenses (This Month):" class="summary-label"></lightning-formatted-text>
+                    <lightning-formatted-number value={totalOneTimeExpenses} format-style="currency" currency-code="USD" class="summary-value"></lightning-formatted-number>
+                </div>
+            </div>
+
+            <div class="summary-section">
+                <div class="summary-title">
+                    <lightning-icon icon-name="utility:currency" alternative-text="Cash Flow Icon" size="small" class="section-icon"></lightning-icon>
+                    <lightning-formatted-text value="Net Monthly Cash Flow"></lightning-formatted-text>
+                </div>
+                <div class="summary-item">
+                    <lightning-formatted-text value="Net Monthly Cash Flow:" class="summary-label"></lightning-formatted-text>
+                    <lightning-formatted-number value={netMonthlyCashFlow} format-style="currency" currency-code="USD" class={cashFlowClass}></lightning-formatted-number>
+                </div>
+            </div>
+        </div>
+    </lightning-card>
+
+    <template if:true={showModal}>
+    <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+            <header class="slds-modal__header">
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={handleCloseModal}>
+                    <lightning-icon icon-name="utility:close" alternative-text="close" size="small"></lightning-icon>
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+                <h2 class="slds-text-heading_medium">{modalTitle}</h2>
+            </header>
+            <div class="slds-modal__content slds-p-around_medium">
+                <lightning-record-edit-form object-api-name={objectApiName} onsuccess={handleSuccess} onerror={handleError}>
+                    <!-- Dynamically include fields based on the object type -->
+                    <lightning-messages></lightning-messages>
+
+                    <!-- Common Fields for both forms -->
+                    <lightning-input-field field-name="User__c"></lightning-input-field>
+
+                    <!-- Fields specific to Income Source -->
+                    <template if:true={isIncomeSource}>
+                        <lightning-input-field field-name="Income_Amount__c"></lightning-input-field>
+                        <lightning-input-field field-name="Income_Frequency__c"></lightning-input-field>
+                        <lightning-input-field field-name="Income_Name__c"></lightning-input-field>
+                        <lightning-input-field field-name="Income_Type__c"></lightning-input-field>
+                    </template>
+
+                    <!-- Fields specific to Recurring Expense -->
+                    <template if:true={isRecurringExpense}>
+                        <lightning-input-field field-name="Expense_Name__c"></lightning-input-field>
+                        <lightning-input-field field-name="Expense_Type__c"></lightning-input-field>
+                        <lightning-input-field field-name="Expense_Amount__c"></lightning-input-field>
+                        <lightning-input-field field-name="Expense_Frequency__c"></lightning-input-field>
+                        <lightning-input-field field-name="Expense_Date__c"></lightning-input-field>
+                    </template>
+
+                    <lightning-button type="submit" label="Save" variant="brand"></lightning-button>
+                </lightning-record-edit-form>
+            </div>
+            <footer class="slds-modal__footer">
+                <lightning-button label="Cancel" onclick={handleCloseModal}></lightning-button>
+            </footer>
+        </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+</template>
+
+</template>

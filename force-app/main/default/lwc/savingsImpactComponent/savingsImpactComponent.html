@@ -1,0 +1,16 @@
+<template>
+    <lightning-card title="Impact of Extra Savings Contribution">
+        <div class="slds-p-around_medium">
+            <lightning-input label="Current Balance"  step="0.01" value={balance} type="number" onchange={handleInputChange} data-id="balance"></lightning-input>
+            <lightning-input label="Interest Rate (%)"  step="0.01" value={interestRate} type="number" onchange={handleInputChange} data-id="interestRate"></lightning-input>
+            <lightning-input label="Monthly Contribution Amount"  step="0.01" value={contribution} type="number" onchange={handleInputChange} data-id="contribution"></lightning-input>
+            <lightning-input label="Years" value={years} type="number" onchange={handleInputChange} data-id="years"></lightning-input>
+            <lightning-button label="Calculate" onclick={calculateFutureBalance} class="slds-m-top_medium"></lightning-button>
+        </div>
+        <template if:true={futureBalance}>
+            <div class="slds-p-around_medium">
+                <p>Future Balance: {futureBalance}</p>
+            </div>
+        </template>
+    </lightning-card>
+</template>
