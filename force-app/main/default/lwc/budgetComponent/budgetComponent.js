@@ -3,8 +3,9 @@ import getBudgetData from '@salesforce/apex/BudgetController.getBudgetData';
 import USER_ID from '@salesforce/user/Id';
 import { refreshApex } from '@salesforce/apex';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import { NavigationMixin } from 'lightning/navigation'; 
 
-export default class BudgetComponent extends LightningElement {
+export default class BudgetComponent extends NavigationMixin(LightningElement) {
     @api recordId;
     totalMonthlyIncome = 0;
     totalFixedExpenses = 0;
@@ -88,5 +89,30 @@ export default class BudgetComponent extends LightningElement {
             variant: variant
         });
         this.dispatchEvent(event);
+    }
+    handleViewIncomeSources() {
+        this[NavigationMixin.Navigate]({
+            type: 'standard__objectPage',
+            attributes: {
+                objectApiName: 'Income_Source__c',
+                actionName: 'list'
+            },
+            state: {
+                filterName: 'All' // Optional: Specify the list view filter name, like 'All' or a custom list view API name.
+            }
+        });
+    }
+
+    handleViewRecurringExpenses() {
+        this[NavigationMixin.Navigate]({
+            type: 'standard__objectPage',
+            attributes: {
+                objectApiName: 'Recurring_Expense__c',
+                actionName: 'list'
+            },
+            state: {
+                filterName: 'All' // Optional: Specify the list view filter name, like 'All' or a custom list view API name.
+            }
+        });
     }
 }

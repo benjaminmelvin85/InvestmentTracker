@@ -5,11 +5,13 @@
         </div>
 
         <div class="slds-p-around_medium content-container">
-            <div class="button-container">
-                <lightning-button label="Add Income Source" onclick={handleAddIncomeSource} class="slds-m-bottom_small"></lightning-button>
-                <lightning-button label="Add Recurring Expense" onclick={handleAddRecurringExpense} class="slds-m-bottom_small"></lightning-button>
+            <!-- Centered, horizontally aligned buttons with spacing -->
+            <div class="slds-text-align_center slds-m-bottom_medium">
+                <lightning-button label="Add Income Source" onclick={handleAddIncomeSource} class="slds-m-right_small"></lightning-button>
+                <lightning-button label="Add Recurring Expense" onclick={handleAddRecurringExpense}></lightning-button>
             </div>
 
+            <!-- Summary sections -->
             <div class="summary-section">
                 <div class="summary-title">
                     <lightning-icon icon-name="utility:money" alternative-text="Income Icon" size="small" class="section-icon"></lightning-icon>
@@ -50,10 +52,17 @@
                     <lightning-formatted-number value={netMonthlyCashFlow} format-style="currency" currency-code="USD" class={cashFlowClass}></lightning-formatted-number>
                 </div>
             </div>
+
+            <!-- Centered, horizontally aligned view buttons with spacing -->
+            <div class="slds-text-align_center slds-m-top_medium">
+                <lightning-button label="View Income Sources" onclick={handleViewIncomeSources} class="slds-m-right_small"></lightning-button>
+                <lightning-button label="View Recurring Expenses" onclick={handleViewRecurringExpenses}></lightning-button>
+            </div>
         </div>
     </lightning-card>
 
-      <c-budget-record-modal 
+    <!-- Include the modal component -->
+    <c-record-modal 
         show-modal={showModal}
         modal-title={modalTitle}
         object-api-name={objectApiName}
@@ -61,6 +70,5 @@
         onclosemodal={handleCloseModal}
         onrecordsuccess={handleRecordSuccess}
         onrecorderror={handleRecordError}>
-    </c-budget-record-modal>
-
+    </c-record-modal>
 </template>
