@@ -84,27 +84,69 @@ public with sharing class BudgetController {
     private static Boolean isCurrentMonth(Date expenseDate) {
         return expenseDate != null && expenseDate.month() == Date.today().month() && expenseDate.year() == Date.today().year();
     }
-    
-        @AuraEnabled
-        public static void createIncomeSource(Decimal incomeAmount, String incomeFrequency, Id userId) {
-            Income_Source__c incomeSource = new Income_Source__c();
-            incomeSource.Income_Amount__c = incomeAmount;
-            incomeSource.Income_Frequency__c = incomeFrequency;
-            incomeSource.User__c = userId;
-            insert incomeSource;
+    @AuraEnabled(cacheable=true)
+    public static List<Monthly_Record__c> getMonthlyRecords(Integer year) {
+        return [
+            SELECT Id, Name, Income__c, Fixed_Expenses__c, Variable_Expenses__c, 
+                   One_Time_Expenses__c, Net_Cash_Flow__c, Month__c, Year__c 
+            FROM Monthly_Record__c 
+            WHERE Year__c = :year
+            ORDER BY Month__c
+        ];
+    }
+
+    @AuraEnabled
+    public static void createOrUpdateMonthlyRecords(Integer year, Decimal income, Decimal fixedExpenses, Decimal variableExpenses, Decimal oneTimeExpenses, Decimal netCashFlow) {
+        // Check if records for the current year already exist
+        List<Monthly_Record__c> existingRecords = [
+            SELECT Id FROM Monthly_Record__c WHERE Year__c = :year
+        ];
+
+        // If records exist, do not create duplicates
+        if (!existingRecords.isEmpty()) {
+            return;
         }
-    
-        @AuraEnabled
-        public static void createRecurringExpense(Decimal expenseAmount, String expenseFrequency, String expenseType, Date expenseDate, Id userId) {
-            Recurring_Expense__c recurringExpense = new Recurring_Expense__c();
-            recurringExpense.Expense_Amount__c = expenseAmount;
-            recurringExpense.Expense_Frequency__c = expenseFrequency;
-            recurringExpense.Expense_Type__c = expenseType;
-            recurringExpense.Expense_Date__c = expenseDate;
-            recurringExpense.User__c = userId;
-            insert recurringExpense;
+
+        // List to hold the new records
+        List<Monthly_Record__c> records = new List<Monthly_Record__c>();
+        List<String> months = new List<String>{'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'};
+
+        // Loop through each month and create records
+        for (Integer i = 0; i < months.size(); i++) {
+            Monthly_Record__c record = new Monthly_Record__c();
+            record.Name = months[i] + ' ' + year;
+            record.Month__c = months[i];
+            record.Year__c = year;
+
+            // Populate January with myFinances data
+            if (i == 0) {
+                record.Income__c = income;
+                record.Fixed_Expenses__c = fixedExpenses;
+                record.Variable_Expenses__c = variableExpenses;
+                record.One_Time_Expenses__c = oneTimeExpenses;
+                // record.Net_Cash_Flow__c = income - (fixedExpenses + variableExpenses + oneTimeExpenses);
+            } else {
+                // Other months should have the same data as January except for Variable and One-Time Expenses
+                record.Income__c = income;
+                record.Fixed_Expenses__c = fixedExpenses;
+                record.Variable_Expenses__c = 0;
+                record.One_Time_Expenses__c = 0;
+                // record.Net_Cash_Flow__c = income - fixedExpenses;
+            }
+
+            records.add(record);
+        }
+
+        // Insert all new records
+        insert records;
+    }
+
+    @AuraEnabled
+    public static void updateMonthlyRecord(Monthly_Record__c record) {
+        try {
+            update record;
+        } catch (Exception e) {
+            throw new AuraHandledException('Error updating record: ' + e.getMessage());
         }
     }
-    
-    
-
+    }

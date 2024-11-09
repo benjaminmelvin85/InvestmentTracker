@@ -1,0 +1,75 @@
+<template>
+    <lightning-modal-header label="Annual SnapShot"></lightning-modal-header>
+    <div class="slds-modal__content slds-p-around_medium">
+        <div>
+            <lightning-button label={editButtonLabel} class="slds-float_right" variant="nuetral" onclick={handleEdit} ></lightning-button>
+        </div>
+        <div class="container" tabindex="0">
+           
+        <div class="grid-container slds-grid slds-gutters">
+            <div
+                class="slds-p-around_xx-small slds-text-title_bold text slds-col"
+                tabindex="0">
+                Your Total Annual Income
+            </div>
+            <div class="box slds-col">
+                <div class="summary-items">
+                    <lightning-icon icon-name="utility:money" alternative-text="Income Icon" size="small" class="section-icon"></lightning-icon>
+                    <lightning-formatted-text value="Total Annual Income:" class="summary-label"></lightning-formatted-text>
+                    <lightning-formatted-number value={annualIncome} format-style="currency" currency-code="USD" class="summary-value"></lightning-formatted-number>
+                </div>
+
+            </div>
+           
+
+            <div
+                class="slds-p-around_xx-small slds-text-title_bold text slds-col"
+                tabindex="0">
+                Your Total Annual Expenses
+            </div>
+            <div class="box slds-col">
+                <div class="summary-items">
+                    <lightning-icon icon-name="utility:adjust_value" alternative-text="Expenses Icon" size="small" class="section-icon"></lightning-icon>
+                    <lightning-formatted-text value="Total Annual Expenses:" class="summary-label"></lightning-formatted-text>
+                    <lightning-formatted-number value={annualExpenses} format-style="currency" currency-code="USD" class="summary-value"></lightning-formatted-number>
+                </div>
+            </div>
+            <div
+            class="slds-p-around_xx-small slds-text-title_bold text slds-col"
+            tabindex="0">
+            Your Net Annual Cash Flow
+        </div>
+        <div class="box slds-col">
+            <div class="summary-items">
+                <lightning-icon icon-name="utility:currency" alternative-text="Cash Flow Icon" size="small" class="section-icon"></lightning-icon>
+                <lightning-formatted-text value="Net Annual Cash Flow:" class="summary-label"></lightning-formatted-text>
+                <lightning-formatted-number value={netCashFlow} format-style="currency" currency-code="USD" class="summary-value"></lightning-formatted-number>
+            </div>
+        </div>
+        </div>
+
+</div>
+            
+       
+        
+        
+
+        <!-- Table to display monthly breakdown -->
+        <lightning-datatable
+            data={monthlyRecords}
+            columns={visibleColumns}
+            key-field="id"
+            hide-checkbox-column="true"
+            default-sort-direction={defaultSortDirection}
+            sorted-direction={sortDirection}
+            sorted-by={sortedBy}
+            onsort={onHandleSort}
+            draft-values={draftValues}
+            onsave={handleSave}
+            column-width-mode="auto">
+        </lightning-datatable>
+    </div>
+    <footer class="slds-modal__footer">
+        <lightning-button label="Close" onclick={handleClose}></lightning-button>
+    </footer>
+</template>
