@@ -83,7 +83,7 @@ export default class AnnualProjectionModal extends LightningModal {
     //         console.log('totalE', totalExpenses)
     //         this.monthlyRecords.push(record);
     //     });
-        
+        //test
     //     this.annualIncome = totalIncome
     //     console.log('annual', this.annualIncome)
     //     this.annualExpenses = totalExpenses
