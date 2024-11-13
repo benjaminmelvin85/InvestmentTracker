@@ -8,6 +8,7 @@
             <!-- Centered, horizontally aligned buttons with spacing -->
             <div class="slds-text-align_center slds-m-bottom_medium">
                 <lightning-button label="Add Income Source" onclick={handleAddIncomeSource} class="slds-m-right_small"></lightning-button>
+                <lightning-button label="Add Savings and Checking Account Contributions" onclick={handleCheckingSavings} class="slds-m-right_small"></lightning-button>
                 <lightning-button label="Add Recurring Expense" onclick={handleAddRecurringExpense}></lightning-button>
             </div>
 
@@ -17,11 +18,30 @@
                     <lightning-icon icon-name="utility:money" alternative-text="Income Icon" size="small" class="section-icon"></lightning-icon>
                     <lightning-formatted-text value="Income Summary"></lightning-formatted-text>
                 </div>
+                
                 <div class="summary-item">
                     <lightning-formatted-text value="Total Monthly Income:" class="summary-label"></lightning-formatted-text>
                     <lightning-formatted-number value={totalMonthlyIncome} format-style="currency" currency-code="USD" class="summary-value"></lightning-formatted-number>
                 </div>
             </div>
+            <div class="summary-section">
+                <div class="summary-title">
+                    <lightning-icon icon-name="utility:adjust_value" alternative-text="Expenses Icon" size="small" class="section-icon"></lightning-icon>
+                    <lightning-formatted-text value="Savings Checking and 401K Summary"></lightning-formatted-text>
+                </div>
+                <div class="summary-item">
+                    <lightning-formatted-text value="Total Savings Balance:" class="summary-label"></lightning-formatted-text>
+                    <lightning-formatted-number value={savingsBalance} format-style="currency" currency-code="USD" class="summary-value"></lightning-formatted-number>
+                </div>
+                <div class="summary-item">
+                    <lightning-formatted-text value="Total Checking Balance:" class="summary-label"></lightning-formatted-text>
+                    <lightning-formatted-number value={checkingBalance} format-style="currency" currency-code="USD" class="summary-value"></lightning-formatted-number>
+                </div>
+                <div class="summary-item">
+                    <lightning-formatted-text value="Total Monthly Contributions:" class="summary-label"></lightning-formatted-text>
+                    <lightning-formatted-number value={totalMonthlyContributions} format-style="currency" currency-code="USD" class="summary-value"></lightning-formatted-number>
+                </div>
+                </div>
 
             <div class="summary-section">
                 <div class="summary-title">
@@ -58,12 +78,13 @@
                 <lightning-button label="View Income Sources" onclick={handleViewIncomeSources} class="slds-m-right_small"></lightning-button>
                 <lightning-button label="View Recurring Expenses" onclick={handleViewRecurringExpenses}></lightning-button>
                 <lightning-button label="View Annual Projection" onclick={handleAnnualProjection} class="slds-m-left_small"></lightning-button>
+                <lightning-button label="View Checking and Savings" onclick={handleViewChecking} class="slds-m-left_small"></lightning-button>
             </div>
         </div>
     </lightning-card>
 
     <!-- Include the modal component -->
-    <c-record-modal 
+    <c-budget-record-modal 
         show-modal={showModal}
         modal-title={modalTitle}
         object-api-name={objectApiName}
@@ -71,5 +92,5 @@
         onclosemodal={handleCloseModal}
         onrecordsuccess={handleRecordSuccess}
         onrecorderror={handleRecordError}>
-    </c-record-modal>
+    </c-budget-record-modal>
 </template>

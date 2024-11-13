@@ -13,6 +13,9 @@ export default class BudgetComponent extends NavigationMixin(LightningElement) {
     totalVariableExpenses = 0;
     totalOneTimeExpenses = 0;
     netMonthlyCashFlow = 0;
+    totalMonthlyContributions = 0;
+    savingsBalance = 0;
+    checkingBalance = 0;
     wiredBudgetDataResult;
     showModal = false;
     modalType = '';
@@ -37,6 +40,9 @@ export default class BudgetComponent extends NavigationMixin(LightningElement) {
             this.totalVariableExpenses = parseFloat(data.totalVariableExpenses).toFixed(2);
             this.totalOneTimeExpenses = parseFloat(data.totalOneTimeExpenses).toFixed(2);
             this.netMonthlyCashFlow = parseFloat(data.netMonthlyCashFlow).toFixed(2);
+            this.totalMonthlyContributions = parseFloat(data.totalMonthlyContributions).toFixed(2);
+            this.savingsBalance = parseFloat(data.totalSavingsBalance).toFixed(2);
+            this.checkingBalance = parseFloat(data.totalCheckingBalance).toFixed(2);
             console.log('data', data);
             this.myFinances = data;
         } else if (error) {
@@ -165,5 +171,23 @@ export default class BudgetComponent extends NavigationMixin(LightningElement) {
         if (result === 'closed') {
             console.log('Modal was closed');
         }
+}
+handleCheckingSavings(){
+    this.modalType = 'isChecking';
+        this.modalTitle = 'Add Checking or Savings Account';
+        this.objectApiName = 'Savings_Checking_Account__c';
+        this.showModal = true;
+}
+handleViewChecking() {
+    this[NavigationMixin.Navigate]({
+        type: 'standard__objectPage',
+        attributes: {
+            objectApiName: 'Savings_Checking_Account__c',
+            actionName: 'list'
+        },
+        state: {
+            filterName: 'All' // Optional: Specify the list view filter name, like 'All' or a custom list view API name.
+        }
+    });
 }
 }

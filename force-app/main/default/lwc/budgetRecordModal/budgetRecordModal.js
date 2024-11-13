@@ -15,7 +15,9 @@ export default class BudgetRecordModal extends LightningElement {
     get isRecurringExpense() {
         return this.modalType === 'RecurringExpense';
     }
-
+    get isChecking() {
+        return this.modalType === 'isChecking';
+    }
     handleCloseModal() {
         const closeEvent = new CustomEvent('closemodal');
         this.dispatchEvent(closeEvent);

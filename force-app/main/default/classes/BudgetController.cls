@@ -8,13 +8,19 @@ public with sharing class BudgetController {
         @AuraEnabled public Decimal totalVariableExpenses;
         @AuraEnabled public Decimal totalOneTimeExpenses;
         @AuraEnabled public Decimal netMonthlyCashFlow;
+        @AuraEnabled public Decimal totalMonthlyContributions;
+        @AuraEnabled public Decimal totalSavingsBalance;
+        @AuraEnabled public Decimal totalCheckingBalance;
 
-        public BudgetData(Decimal totalMonthlyIncome, Decimal totalFixedExpenses, Decimal totalVariableExpenses, Decimal totalOneTimeExpenses, Decimal netMonthlyCashFlow) {
+        public BudgetData(Decimal totalMonthlyIncome, Decimal totalFixedExpenses, Decimal totalVariableExpenses, Decimal totalOneTimeExpenses, Decimal netMonthlyCashFlow, Decimal totalMonthlyContributions, Decimal totalCheckingBalance, Decimal totalSavingsBalance) {
             this.totalMonthlyIncome = totalMonthlyIncome;
             this.totalFixedExpenses = totalFixedExpenses;
             this.totalVariableExpenses = totalVariableExpenses;
             this.totalOneTimeExpenses = totalOneTimeExpenses;
             this.netMonthlyCashFlow = netMonthlyCashFlow;
+            this.totalMonthlyContributions = totalMonthlyContributions;
+            this.totalSavingsBalance = totalSavingsBalance;
+            this.totalCheckingBalance = totalCheckingBalance;
         }
     }
 
@@ -33,12 +39,20 @@ public with sharing class BudgetController {
             FROM Recurring_Expense__c 
             WHERE User__c = :userId  
         ];
+        List<Savings_Checking_Account__c> savingExpenses = [
+            SELECT Monthly_Contribution__c, Balance__c, Account_Type__c 
+            FROM Savings_Checking_Account__c 
+            WHERE User__c = :userId  
+        ];
 
         // Perform Calculations
         Decimal totalMonthlyIncome = 0;
         Decimal totalFixedExpenses = 0;
         Decimal totalVariableExpenses = 0;
         Decimal totalOneTimeExpenses = 0;
+        Decimal totalMonthlyContributions = 0;
+        Decimal totalSavingsBalance = 0;
+        Decimal totalCheckingBalance = 0;
 
         // Calculate Monthly Income
         for (Income_Source__c income : incomes) {
@@ -57,11 +71,22 @@ public with sharing class BudgetController {
                 totalOneTimeExpenses += expense.Expense_Amount__c;
             }
         }
+        for (Savings_Checking_Account__c savings : savingExpenses) {
+            totalMonthlyContributions += savings.Monthly_Contribution__c;
+            if (savings.Account_Type__c == 'Savings') {
+                totalSavingsBalance += savings.Balance__c;
+            } else if (savings.Account_Type__c == 'Checking') {
+                totalCheckingBalance += savings.Balance__c;
+            }
+        }
+
+        totalMonthlyIncome -= totalMonthlyContributions;
+
 
         // Calculate Net Monthly Cash Flow
         Decimal netMonthlyCashFlow = totalMonthlyIncome - (totalFixedExpenses + totalVariableExpenses + totalOneTimeExpenses);
 
-        return new BudgetData(totalMonthlyIncome, totalFixedExpenses, totalVariableExpenses, totalOneTimeExpenses, netMonthlyCashFlow);
+        return new BudgetData(totalMonthlyIncome, totalFixedExpenses, totalVariableExpenses, totalOneTimeExpenses, netMonthlyCashFlow, totalMonthlyContributions, totalCheckingBalance, totalSavingsBalance);
     }
 
     // Helper methods to calculate monthly amounts and check the current month
