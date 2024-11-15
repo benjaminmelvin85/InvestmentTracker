@@ -20,9 +20,10 @@
             <lightning-button label="Calculate" onclick={calculateFutureBalance} class="slds-m-top_medium"></lightning-button>
         </div>
         <template if:true={futureBalance}>
-            <div class="slds-p-around_medium">
-                <p>Future Balance: {futureBalance}</p>
-            </div>
-        </template>
+    <div class="slds-p-around_medium future-balance">
+        <p class="balance-label"><strong>Future Balance:</strong></p>
+        <p class="highlighted-balance">{futureBalance}</p>
+    </div>
+</template>
     </lightning-card>
 </template>
