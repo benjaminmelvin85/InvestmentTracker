@@ -1,9 +1,21 @@
 <template>
     <lightning-card title="Impact of Extra Savings Contribution">
+        <div>
+            <lightning-combobox
+            name="progress"
+            label="Status"
+            value={value}
+            placeholder="Select Account Type"
+            options={options}
+            onchange={handleChange} ></lightning-combobox>
+
+    <p>Selected value is: {value}</p>
+        </div>
+        
         <div class="slds-p-around_medium">
-            <lightning-input label="Current Balance"  step="0.01" value={balance} type="number" onchange={handleInputChange} data-id="balance"></lightning-input>
-            <lightning-input label="Interest Rate (%)"  step="0.01" value={interestRate} type="number" onchange={handleInputChange} data-id="interestRate"></lightning-input>
-            <lightning-input label="Monthly Contribution Amount"  step="0.01" value={contribution} type="number" onchange={handleInputChange} data-id="contribution"></lightning-input>
+            <lightning-input label="Current Balance"  step="0.01" value={totalBalance} type="number" onchange={handleInputChange} data-id="balance"></lightning-input>
+            <lightning-input label="Interest Rate (%)"  step="0.01" value={interestRates} type="number" onchange={handleInputChange} data-id="interestRate"></lightning-input>
+            <lightning-input label="Monthly Contribution Amount"  step="0.01" value={monthlyContributions} type="number" onchange={handleInputChange} data-id="contribution"></lightning-input>
             <lightning-input label="Years" value={years} type="number" onchange={handleInputChange} data-id="years"></lightning-input>
             <lightning-button label="Calculate" onclick={calculateFutureBalance} class="slds-m-top_medium"></lightning-button>
         </div>

@@ -6,6 +6,7 @@ import { refreshApex } from '@salesforce/apex';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { NavigationMixin } from 'lightning/navigation'; 
 import annualprojection from 'c/annualProjectionModal';
+import reusableModal from 'c/reusableModal';
 export default class BudgetComponent extends NavigationMixin(LightningElement) {
     @api recordId;
     totalMonthlyIncome = 0;
@@ -21,6 +22,7 @@ export default class BudgetComponent extends NavigationMixin(LightningElement) {
     modalType = '';
     modalTitle = '';
     objectApiName = '';
+    total401KBalance=0;
 
     get isIncomeSource() {
         return this.modalType === 'IncomeSource';
@@ -43,6 +45,7 @@ export default class BudgetComponent extends NavigationMixin(LightningElement) {
             this.totalMonthlyContributions = parseFloat(data.totalMonthlyContributions).toFixed(2);
             this.savingsBalance = parseFloat(data.totalSavingsBalance).toFixed(2);
             this.checkingBalance = parseFloat(data.totalCheckingBalance).toFixed(2);
+            this.total401KBalance = parseFloat(data.total401KBalance).toFixed(2);
             console.log('data', data);
             this.myFinances = data;
         } else if (error) {
@@ -59,6 +62,7 @@ export default class BudgetComponent extends NavigationMixin(LightningElement) {
     }
 
     refreshData() {
+        console.log('refreshDataCalled')
         if (this.wiredBudgetDataResult) {
             refreshApex(this.wiredBudgetDataResult);
         }
@@ -99,30 +103,92 @@ export default class BudgetComponent extends NavigationMixin(LightningElement) {
         });
         this.dispatchEvent(event);
     }
-    handleViewIncomeSources() {
-        this[NavigationMixin.Navigate]({
-            type: 'standard__objectPage',
-            attributes: {
-                objectApiName: 'Income_Source__c',
-                actionName: 'list'
-            },
-            state: {
-                filterName: 'All' // Optional: Specify the list view filter name, like 'All' or a custom list view API name.
-            }
+    async handleViewIncomeSources() {
+        const result = await reusableModal.open({
+            label: 'testing 1,2,3',
+            size: 'medium',
+            description: 'View your annual budget projection',
+            objectApiName: 'Income_Source__c',
+            title: 'Income Sources',
+            columns: [
+                { label: 'Name', fieldName: 'Income_Name__c', },
+                { label: 'Income Amount', fieldName: 'Income_Amount__c'},
+                { label: 'Income Frequency', fieldName: 'Income_Frequency__c'},
+                { label: 'Income Type', fieldName: 'Income_Type__c'},
+                
+            ],
+            refreshCallback: () => this.refreshData()
         });
+    
+        if (result === 'refresh') {
+            this.refreshData();
+            console.log('refresh the Data');
+        }
+        // this[NavigationMixin.Navigate]({
+        //     type: 'standard__objectPage',
+        //     attributes: {
+        //         objectApiName: 'Income_Source__c',
+        //         actionName: 'list'
+        //     },
+        //     state: {
+        //         filterName: 'All' // Optional: Specify the list view filter name, like 'All' or a custom list view API name.
+        //     }
+        // });
+        // console.log('hit button');
+        // try{
+        // await reusableModal.open({
+        //     label: 'test',
+        //         size: 'medium',
+        //         description: 'View your income sources',
+                // objectApiName: 'Income_Source__c',
+                // columns: [{
+                //     label: 'Name',
+                //     fieldName: 'Name',
+                 
+                    
+                // },  ],
+                // title: 'Income Sources',
+                
+        //     })
+        // // } catch (error) {
+        // //     console.error('your error is', error)
+        // // }
+        //     console.log('did it make it here?')
+            // if (result === 'closed') {
+            //     console.log('Modal was closed');
+            // }
     }
 
-    handleViewRecurringExpenses() {
-        this[NavigationMixin.Navigate]({
-            type: 'standard__objectPage',
-            attributes: {
-                objectApiName: 'Recurring_Expense__c',
-                actionName: 'list'
-            },
-            state: {
-                filterName: 'All' // Optional: Specify the list view filter name, like 'All' or a custom list view API name.
-            }
+    async handleViewRecurringExpenses() {
+        const result = await reusableModal.open({
+            label: 'testing 1,2,3',
+            size: 'medium',
+            description: 'View your annual budget projection',
+            objectApiName: 'Recurring_Expense__c',
+            title: 'Recurring Expenses',
+            columns: [
+                { label: 'Name', fieldName: 'Expense_Name__c', },
+                { label: 'Expense Amount', fieldName: 'Expense_Amount__c'},
+                { label: 'Expense Frequency', fieldName: 'Expense_Frequency__c'},
+                { label: 'Expense Type', fieldName: 'Expense_Type__c'},
+                
+            ],
+            refreshCallback: () => this.refreshData()
         });
+    
+        if (result === 'closed') {
+            console.log('Modal was closed');
+        }
+        // this[NavigationMixin.Navigate]({
+        //     type: 'standard__objectPage',
+        //     attributes: {
+        //         objectApiName: 'Recurring_Expense__c',
+        //         actionName: 'list'
+        //     },
+        //     state: {
+        //         filterName: 'All' // Optional: Specify the list view filter name, like 'All' or a custom list view API name.
+        //     }
+        // });
     }
     // async handleAnnualProjection(){
     //     console.log('in addresses open please');
@@ -178,16 +244,38 @@ handleCheckingSavings(){
         this.objectApiName = 'Savings_Checking_Account__c';
         this.showModal = true;
 }
-handleViewChecking() {
-    this[NavigationMixin.Navigate]({
-        type: 'standard__objectPage',
-        attributes: {
-            objectApiName: 'Savings_Checking_Account__c',
-            actionName: 'list'
-        },
-        state: {
-            filterName: 'All' // Optional: Specify the list view filter name, like 'All' or a custom list view API name.
-        }
+async handleViewChecking() {
+
+    //SELECT Account_Name__c, Balance__c, Account_Type__c,Monthly_Contribution__c, Interest_Rate__c
+    const result = await reusableModal.open({
+        label: 'testing 1,2,3',
+        size: 'medium',
+        description: 'View your annual budget projection',
+        objectApiName: 'Savings_Checking_Account__c',
+        title: 'Savings, Checking and 401K Accounts',
+        columns: [
+            { label: 'Name', fieldName: 'Account_Name__c', },
+            { label: 'Balance', fieldName: 'Balance__c'},
+            { label: 'Account Type', fieldName: 'Account_Type__c'},
+            { label: 'Monthly Contribution', fieldName: 'Monthly_Contribution__c'},
+            { label: 'Interest Rate', fieldName: 'Interest_Rate__c', },
+            
+        ],
+        refreshCallback: () => this.refreshData()
     });
+
+    if (result === 'closed') {
+        console.log('Modal was closed');
+    }
+    // this[NavigationMixin.Navigate]({
+    //     type: 'standard__objectPage',
+    //     attributes: {
+    //         objectApiName: 'Savings_Checking_Account__c',
+    //         actionName: 'list'
+    //     },
+    //     state: {
+    //         filterName: 'All' // Optional: Specify the list view filter name, like 'All' or a custom list view API name.
+    //     }
+    // });
 }
 }

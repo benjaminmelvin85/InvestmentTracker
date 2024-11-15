@@ -1,0 +1,21 @@
+<template>
+    <lightning-modal-header label={title}></lightning-modal-header>
+    
+    <lightning-modal-body>
+        <div class="slds-modal__content slds-p-around_medium">
+        <div>
+        <lightning-button label=Edit class="slds-float_right" variant="nuetral" onclick={handleEdit} ></lightning-button>
+    
+    
+    </div>
+</div>
+        <lightning-datatable
+        key-field="Id"
+        data={data}
+        columns={myColumns}
+        draft-values={draftValues}
+            onsave={handleSave}
+            column-width-mode="auto"
+        ></lightning-datatable>
+    </lightning-modal-body>
+</template>

@@ -11,8 +11,9 @@ public with sharing class BudgetController {
         @AuraEnabled public Decimal totalMonthlyContributions;
         @AuraEnabled public Decimal totalSavingsBalance;
         @AuraEnabled public Decimal totalCheckingBalance;
+        @AuraEnabled public Decimal total401KBalance;
 
-        public BudgetData(Decimal totalMonthlyIncome, Decimal totalFixedExpenses, Decimal totalVariableExpenses, Decimal totalOneTimeExpenses, Decimal netMonthlyCashFlow, Decimal totalMonthlyContributions, Decimal totalCheckingBalance, Decimal totalSavingsBalance) {
+        public BudgetData(Decimal totalMonthlyIncome, Decimal totalFixedExpenses, Decimal totalVariableExpenses, Decimal totalOneTimeExpenses, Decimal netMonthlyCashFlow, Decimal totalMonthlyContributions, Decimal totalCheckingBalance, Decimal totalSavingsBalance, Decimal total401KBalance) {
             this.totalMonthlyIncome = totalMonthlyIncome;
             this.totalFixedExpenses = totalFixedExpenses;
             this.totalVariableExpenses = totalVariableExpenses;
@@ -21,6 +22,7 @@ public with sharing class BudgetController {
             this.totalMonthlyContributions = totalMonthlyContributions;
             this.totalSavingsBalance = totalSavingsBalance;
             this.totalCheckingBalance = totalCheckingBalance;
+            this.total401KBalance = total401KBalance;
         }
     }
 
@@ -53,6 +55,7 @@ public with sharing class BudgetController {
         Decimal totalMonthlyContributions = 0;
         Decimal totalSavingsBalance = 0;
         Decimal totalCheckingBalance = 0;
+        Decimal total401KBalance = 0;
 
         // Calculate Monthly Income
         for (Income_Source__c income : incomes) {
@@ -77,6 +80,8 @@ public with sharing class BudgetController {
                 totalSavingsBalance += savings.Balance__c;
             } else if (savings.Account_Type__c == 'Checking') {
                 totalCheckingBalance += savings.Balance__c;
+            }  else if (savings.Account_Type__c == '401K') {
+                total401KBalance += savings.Balance__c;// create 401K balance
             }
         }
 
@@ -86,7 +91,7 @@ public with sharing class BudgetController {
         // Calculate Net Monthly Cash Flow
         Decimal netMonthlyCashFlow = totalMonthlyIncome - (totalFixedExpenses + totalVariableExpenses + totalOneTimeExpenses);
 
-        return new BudgetData(totalMonthlyIncome, totalFixedExpenses, totalVariableExpenses, totalOneTimeExpenses, netMonthlyCashFlow, totalMonthlyContributions, totalCheckingBalance, totalSavingsBalance);
+        return new BudgetData(totalMonthlyIncome, totalFixedExpenses, totalVariableExpenses, totalOneTimeExpenses, netMonthlyCashFlow, totalMonthlyContributions, totalCheckingBalance, totalSavingsBalance, total401KBalance);
     }
 
     // Helper methods to calculate monthly amounts and check the current month
@@ -173,5 +178,22 @@ public with sharing class BudgetController {
         } catch (Exception e) {
             throw new AuraHandledException('Error updating record: ' + e.getMessage());
         }
+    }
+    @AuraEnabled
+    public static List<sObject> getRecords(String objectApiName){
+        String query;
+        if (objectApiName == 'Income_Source__c') {
+            query = 'SELECT Income_Name__c, Income_Amount__c, Income_Frequency__c, Income_Type__c FROM ' + objectApiName;
+        }
+        else if (objectApiName == 'Recurring_Expense__c') {
+            query = 'SELECT Expense_Name__c, Expense_Amount__c, Expense_Frequency__c, Expense_Type__c FROM ' + objectApiName;
+        } else if (objectApiName == 'Savings_Checking_Account__c') {
+            query = 'SELECT Account_Name__c, Balance__c, Account_Type__c,Monthly_Contribution__c, Interest_Rate__c FROM ' + objectApiName;
+        }
+        
+
+
+       
+       return Database.query(query);
     }
     }
